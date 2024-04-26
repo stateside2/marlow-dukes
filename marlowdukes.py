@@ -10,12 +10,12 @@ import pandas as pd
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-excel_file = "data/latest_data.csv"
+excel_file = "data/latest_data.xlsx"
 st.set_page_config(page_title="Marlow Dukes", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
 # --- HIDE STREAMLIT HEADER/FOOTER MENUS ---
 hide_st_style = """ 
-	<style>MainMenu {visibility: visible;} footer {visibility: visible;} header {visibility: visible;}</style>
+	<style>MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}</style>
 	"""
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
@@ -51,12 +51,13 @@ if menu_selection == "MOTM":
 st.divider()
 
 # --- EXCEL SOURCE FILE DATE ---
-file_totalsecs = os.stat(excel_file).st_mtime
-file_year = str(time.gmtime(file_totalsecs).tm_year)
-file_month = str(time.gmtime(file_totalsecs).tm_mon)
-file_day = str(time.gmtime(file_totalsecs).tm_mday)
+# file_totalsecs = os.stat(excel_file).st_mtime
+# file_year = str(time.gmtime(file_totalsecs).tm_year)
+# file_month = str(time.gmtime(file_totalsecs).tm_mon)
+# file_day = str(time.gmtime(file_totalsecs).tm_mday)
+# st.write(file_day,"/",file_month,"/",file_year)
 
-st.write(file_day,"/",file_month,"/",file_year)
+st.write("15/4/2024")
 
 # --- HALL OF FAME LINK NEEDED ---
 
