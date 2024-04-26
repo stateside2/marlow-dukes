@@ -1,5 +1,6 @@
 
 # in terminal > pip install pandas openpyxl streamlit streamlit-option-menu
+# pip install pipreqs ... installs whats needed to createt the reqirements.txt
 # excel sheet names = League Table, Captains, MOTM, Goals, Board Room
 # icons from bootstrap
 
@@ -9,12 +10,12 @@ import pandas as pd
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-excel_file = "data/latest_data.xlsx"
+excel_file = "data/latest_data.csv"
 st.set_page_config(page_title="Marlow Dukes", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
 # --- HIDE STREAMLIT HEADER/FOOTER MENUS ---
 hide_st_style = """ 
-	<style>MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}</style>
+	<style>MainMenu {visibility: visible;} footer {visibility: visible;} header {visibility: visible;}</style>
 	"""
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
@@ -63,7 +64,7 @@ st.write(file_day,"/",file_month,"/",file_year)
 # st.markdown("##")
 # st.snow() # --- WINTER / XMAS UPDATE --- DOES IT WORK ON CELLPHONE?
 # st.balloons() # --- END OF SEASON CELEBRATION --- DOES IT WORK ON CELLPHONE?
-# st.toast("xxxxxxxxxx is the winner", icon="🔥") # --- WINNER ANNOUNCEMENT --- DOES IT WORK ON CELLPHONE?
+# st.toast("xxxxxxx is the winner", icon="🔥") # --- WINNER ANNOUNCEMENT --- DOES IT WORK ON CELLPHONE?
 # time.sleep(1) --- ALSO HAVE TO import time
 
 # st.title("Title Marlow Dukes") --- st.header("This is a header") --- st.subheader("Sub Header") --- st.markdown("data correct as of ...")
