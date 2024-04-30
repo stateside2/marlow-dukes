@@ -4,7 +4,7 @@
 # excel sheet names = League Table, Captains, MOTM, Goals, Board Room
 # icons from bootstrap
 
-import os
+# import os
 import time
 import pandas as pd
 import streamlit as st
@@ -23,6 +23,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 st.image("images/marlowdukesbanner.png", use_column_width="auto")
 st.divider()
 
+
 # --- MENU NAVBAR ---
 menu_selection = option_menu(menu_title=None,
 	options=["League Table", "Goals", "MOTM", "Board Room"],
@@ -32,23 +33,21 @@ menu_selection = option_menu(menu_title=None,
 
 st.divider()
 
-# --- DATA FRAME SELECTION ---
-df_ltable = pd.read_excel(excel_file, skiprows=[0,1,3,37,38], sheet_name='League Table', usecols=[0,52,58,59])
+# --- PANDAS DATA FRAME SELECTION ---
+df_ltable = pd.read_excel(excel_file, skiprows=[0,1,3,37,38], sheet_name='League Table', usecols=[0,52,54,58,59])
 df_goals = pd.read_excel(excel_file, skiprows=[0,1,3,37,38,39,40], sheet_name='Goals', usecols=[0,52])
 df_broom = pd.read_excel(excel_file, skiprows=7, sheet_name='Board Room', usecols=[12,13])
 df_motm = pd.read_excel(excel_file, skiprows=[1,35,36,37,38,39], sheet_name='MOTM', usecols=[0,52])
 
 
 if menu_selection == "League Table":
-	st.dataframe(df_ltable, width=None, height=1225, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","G/D","PTS"], column_config={"POSITION": " ", "G/D": "GD", "PTS": "POINTS"})
+	st.dataframe(df_ltable, width=None, height=1225, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","PLAYED","G/D","PTS"], column_config={"POSITION": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
 if menu_selection == "Goals":
 	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"TOTAL": "GOALS"})
 if menu_selection == "Board Room":
 	st.dataframe(df_broom, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
 if menu_selection == "MOTM":
 	st.dataframe(df_motm, width=None, height=1225, use_container_width=True, hide_index=True)
-
-st.divider()
 
 # --- EXCEL SOURCE FILE DATE ---
 # file_totalsecs = os.stat(excel_file).st_mtime
@@ -58,6 +57,9 @@ st.divider()
 # st.write(file_day,"/",file_month,"/",file_year)
 
 st.write("15/4/2024")
+
+st.divider()
+
 
 # --- HALL OF FAME LINK NEEDED ---
 
