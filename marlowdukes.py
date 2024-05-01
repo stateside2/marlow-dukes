@@ -9,6 +9,7 @@ import time
 import pandas as pd
 import streamlit as st
 from streamlit_option_menu import option_menu
+import streamlit_antd_components as sac
 
 excel_file = "data/latest_data.xlsx"
 st.set_page_config(page_title="Marlow Dukes", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
@@ -30,15 +31,26 @@ st.divider()
 # file_day = str(time.gmtime(file_totalsecs).tm_mday)
 # st.write(file_day,"/",file_month,"/",file_year)
 
-st.write("Week 16 - 23/4/2024")
+# st.write("Week 16 - 23/4/2024")
+File_Date = "Week 16 - 23/4/2024"
 
+# --- MENU NAVBAR --- (failed to work on Safari)
+# menu_selection = option_menu(menu_title=None,
+# 	options=["League Table", "Goals", "MOTM", "Board Room"],
+#	icons=["trophy-fill", "life-preserver", "person-arms-up", "bank"],
+#	default_index=0,
+#	orientation="horizontal")
 
 # --- MENU NAVBAR ---
-menu_selection = option_menu(menu_title=None,
-	options=["League Table", "Goals", "MOTM", "Board Room"],
-	icons=["trophy-fill", "life-preserver", "person-arms-up", "bank"],
-	default_index=0,
-	orientation="horizontal")
+menu_selection = sac.segmented(
+    items=[
+        sac.SegmentedItem(label="League Table", icon="trophy-fill"),
+        sac.SegmentedItem(label="Goals", icon="life-preserver"),
+        sac.SegmentedItem(label="MOTM", icon="person-arms-up"),
+        sac.SegmentedItem(label="Board Room", icon="bank"),
+        #sac.SegmentedItem(label="Board Room", icon='share-fill', href='https://mantine.dev/core/segmented-control/'),
+    ], label=File_Date, format_func=None, align="center", size="md", radius="md", color="dark", bg_color=None, divider=False, use_container_width=True
+)
 
 st.divider()
 
