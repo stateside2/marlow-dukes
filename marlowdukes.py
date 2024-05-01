@@ -23,6 +23,15 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 st.image("images/marlowdukesbanner.png", use_column_width="auto")
 st.divider()
 
+# --- EXCEL SOURCE FILE DATE ---
+# file_totalsecs = os.stat(excel_file).st_mtime
+# file_year = str(time.gmtime(file_totalsecs).tm_year)
+# file_month = str(time.gmtime(file_totalsecs).tm_mon)
+# file_day = str(time.gmtime(file_totalsecs).tm_mday)
+# st.write(file_day,"/",file_month,"/",file_year)
+
+st.write("Week 16 - 23/4/2024")
+
 
 # --- MENU NAVBAR ---
 menu_selection = option_menu(menu_title=None,
@@ -49,14 +58,6 @@ if menu_selection == "Board Room":
 if menu_selection == "MOTM":
 	st.dataframe(df_motm, width=None, height=1225, use_container_width=True, hide_index=True)
 
-# --- EXCEL SOURCE FILE DATE ---
-# file_totalsecs = os.stat(excel_file).st_mtime
-# file_year = str(time.gmtime(file_totalsecs).tm_year)
-# file_month = str(time.gmtime(file_totalsecs).tm_mon)
-# file_day = str(time.gmtime(file_totalsecs).tm_mday)
-# st.write(file_day,"/",file_month,"/",file_year)
-
-st.write("15/4/2024")
 
 st.divider()
 
