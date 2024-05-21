@@ -32,7 +32,7 @@ st.divider()
 # st.write(file_day,"/",file_month,"/",file_year)
 
 # st.write("Week 16 - 23/4/2024")
-File_Date = "Week 19 - 8th May 2024"
+File_Date = "Week 20 - 15th May 2024"
 
 # --- MENU NAVBAR --- (failed to work on Safari)
 # menu_selection = option_menu(menu_title=None,
@@ -64,7 +64,7 @@ if menu_selection == "League Table":
 if menu_selection == "Goals":
 	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"TOTAL": "GOALS"})
 if menu_selection == "Board Room":
-	st.dataframe(df_broom, width=None, height=700, use_container_width=True, hide_index=True, column_config={"Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
+	st.dataframe(df_broom, width=None, height=750, use_container_width=True, hide_index=True, column_config={"Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
 if menu_selection == "MOTM":
 	st.dataframe(df_motm, width=None, height=1225, use_container_width=True, hide_index=True)
 
