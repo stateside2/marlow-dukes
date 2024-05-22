@@ -32,7 +32,7 @@ st.divider()
 # st.write(file_day,"/",file_month,"/",file_year)
 
 # st.write("Week 16 - 23/4/2024")
-File_Date = "Week 20 - 15th May 2024"
+File_Date = "Week 21 - 22nd May 2024"
 
 # --- MENU NAVBAR --- (failed to work on Safari)
 # menu_selection = option_menu(menu_title=None,
@@ -53,7 +53,7 @@ menu_selection = sac.segmented(
 )
 
 # --- PANDAS DATA FRAME SELECTION ---
-df_ltable = pd.read_excel(excel_file, skiprows=[0,1,3,37,38], sheet_name='League Table', usecols=[0,52,54,58,59])
+df_ltable = pd.read_excel(excel_file, skiprows=[0,1,3,38,39], sheet_name='League Table', usecols=[0,52,54,58,59])
 df_goals = pd.read_excel(excel_file, skiprows=[0,1,3,37,38,39,40], sheet_name='Goals', usecols=[0,52])
 df_broom = pd.read_excel(excel_file, skiprows=7, nrows=19, sheet_name='Board Room', usecols=[12,13])
 df_motm = pd.read_excel(excel_file, skiprows=[1,35,36,37,38,39], sheet_name='MOTM', usecols=[0,52])
