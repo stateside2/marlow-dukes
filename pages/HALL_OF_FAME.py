@@ -34,10 +34,11 @@ hof_selection = sac.segmented(
    items=[
        sac.SegmentedItem(label="Champions", icon="award"),
        sac.SegmentedItem(label="Podiums", icon="list-ol"),
-     ], label=None, format_func=None, align="center", size="md", radius="md", color="dark", bg_color=None, divider=False, use_container_width=False)
+     ], label=None, format_func=None, align="center", size="md", radius="md", color="dark", bg_color=None, divider=False, use_container_width=True)
 # ---
 
 
+# --- PANDAS DATA FRAME SELECTION ---
 if hof_selection == "Champions":
 	hof_champs = pd.read_excel(excel_file, sheet_name="CHAMPIONS", skiprows=None, usecols=[0,1,2,6])
 	hof_champs["SEASON"] = hof_champs["SEASON"].astype(str) #--- CONVERTS 2,023 TO 2023

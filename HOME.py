@@ -5,11 +5,11 @@
 # icons from bootstrap
 
 # import os
-import time
+# import time
 import pandas as pd
 import streamlit as st
-from streamlit_option_menu import option_menu
-import streamlit_antd_components as sac
+# from streamlit_option_menu import option_menu
+import streamlit_antd_components as sac #--- NEEDED FOR THE 2ND NAVBAR
 
 excel_file = "data/latest_data.xlsx"
 st.set_page_config(page_title="Marlow Dukes", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
@@ -21,6 +21,7 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
 
+# --- BANNER IMAGE
 st.image("images/marlowdukesbanner.png", use_column_width="auto")
 st.divider()
 
@@ -58,9 +59,12 @@ df_goals = pd.read_excel(excel_file, skiprows=[0,1,3,37,38,39,40], sheet_name='G
 df_broom = pd.read_excel(excel_file, skiprows=7, nrows=19, sheet_name='Board Room', usecols=[12,13])
 df_motm = pd.read_excel(excel_file, skiprows=[1,35,36,37,38,39], sheet_name='MOTM', usecols=[0,52])
 
+# --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
+df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper()
+
 
 if menu_selection == "League Table":
-	st.dataframe(df_ltable, width=None, height=1225, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","PLAYED","G/D","PTS"], column_config={"POSITION": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
+	st.dataframe(df_ltable, width=None, height=1250, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","PLAYED","G/D","PTS"], column_config={"POSITION": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
 if menu_selection == "Goals":
 	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"TOTAL": "GOALS"})
 if menu_selection == "Board Room":
