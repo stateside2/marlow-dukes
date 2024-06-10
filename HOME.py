@@ -56,7 +56,7 @@ menu_selection = sac.segmented(
 # --- PANDAS DATA FRAME SELECTION ---
 df_ltable = pd.read_excel(excel_file, skiprows=[0,1,3,38,39], sheet_name='League Table', usecols=[0,52,54,58,59])
 df_goals = pd.read_excel(excel_file, skiprows=[0,1,3,37,38,39,40], sheet_name='Goals', usecols=[0,52])
-df_broom = pd.read_excel(excel_file, skiprows=7, nrows=19, sheet_name='Board Room', usecols=[12,13])
+df_broom = pd.read_excel(excel_file, skiprows=7, nrows=19, sheet_name='Board Room', usecols=[12,13]).fillna(0)
 df_motm = pd.read_excel(excel_file, skiprows=[1,35,36,37,38,39], sheet_name='MOTM', usecols=[0,52])
 
 # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
