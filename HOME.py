@@ -33,7 +33,7 @@ st.divider()
 # st.write(file_day,"/",file_month,"/",file_year)
 
 # st.write("Week 16 - 23/4/2024")
-File_Date = "Week 23 - 5th June 2024"
+File_Date = "Week 24 - 12th June 2024"
 
 # --- MENU NAVBAR --- (failed to work on Safari)
 # menu_selection = option_menu(menu_title=None,
@@ -54,17 +54,18 @@ menu_selection = sac.segmented(
 )
 
 # --- PANDAS DATA FRAME SELECTION ---
-df_ltable = pd.read_excel(excel_file, skiprows=[0,1,3,38,39], sheet_name='League Table', usecols=[0,52,54,58,59])
+df_ltable = pd.read_excel(excel_file, skiprows=[0,1,3,39,40], sheet_name='League Table', usecols=[0,52,54,58,59])
 df_goals = pd.read_excel(excel_file, skiprows=[0,1,3,37,38,39,40], sheet_name='Goals', usecols=[0,52])
 df_broom = pd.read_excel(excel_file, skiprows=7, nrows=19, sheet_name='Board Room', usecols=[12,13]).fillna(0)
 df_motm = pd.read_excel(excel_file, skiprows=[1,35,36,37,38,39], sheet_name='MOTM', usecols=[0,52])
 
 # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
 df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper()
+df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
 
 
 if menu_selection == "League Table":
-	st.dataframe(df_ltable, width=None, height=1250, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","PLAYED","G/D","PTS"], column_config={"POSITION": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
+	st.dataframe(df_ltable, width=None, height=1275, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","PLAYED","G/D","PTS"], column_config={"POSITION": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
 if menu_selection == "Goals":
 	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"TOTAL": "GOALS"})
 if menu_selection == "Board Room":

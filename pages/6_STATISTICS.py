@@ -16,7 +16,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
 
 # --- BANNER IMAGE
-st.image("images/marlowdukesbanner.png", use_column_width="auto") # --- CREATE NEW BANNER FOR STATS PAGE
+st.image("images/marlowdukesbannerSTATS.png", use_column_width="auto") # --- CREATE NEW BANNER FOR STATS PAGE
 st.divider()
 
 # --- MENU NAVBAR ---
@@ -37,7 +37,7 @@ stat_selection = sac.buttons(
 ], label=None, format_func=None, align="center", size="xs", radius=2, color="#4682b4", use_container_width=True)
 
 
-miss_rows = [0,1,3,38,39]
+miss_rows = [0,1,3,39,40]
 # --- PANDAS DATA EXTRACTS ---
 # --- APEARANCES
 df_appear = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,54])
@@ -124,7 +124,7 @@ df_play_anal = df_play_anal.style.background_gradient(cmap="Greens", subset="WIN
 .format({"WIN %": "{:.3f}", "DRAW %": "{:.3f}", "LOSS %": "{:.3f}", "GOALS/MATCH": "{:.3f}"})  #--- IMPORT MATPLOTLIB
 
 
-frame_size = 1250
+frame_size = 1275
 # --- STREAMLIT DATAFRAME SELECTION ---
 if stat_selection == "Most Appearances":
 	st.dataframe(df_appear, width=None, height=frame_size, use_container_width=True, hide_index=True, column_config={"PLAYED": "APPEARANCES"})

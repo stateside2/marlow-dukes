@@ -22,19 +22,12 @@ st.image("images/marlowdukesbannerHOF.png", use_column_width="auto")
 st.divider()
 
 
-# --- MENU NAVBAR --- (failed to work on Safari)
-# menu_selection = option_menu(menu_title=None,
-# 	options=["League Table", "Goals", "MOTM", "Board Room"],
-#	icons=["trophy-fill", "life-preserver", "person-arms-up", "bank"],
-#	default_index=0,
-#	orientation="horizontal")
-
-# --- MENU NAVBAR ---
-hof_selection = sac.segmented(
+# --- MENU NAVBAR --- 
+hof_selection = sac.buttons(
    items=[
-       sac.SegmentedItem(label="Champions", icon="award"),
-       sac.SegmentedItem(label="Podiums", icon="list-ol"),
-     ], label=None, format_func=None, align="center", size="md", radius="md", color="dark", bg_color=None, divider=False, use_container_width=True)
+    sac.ButtonsItem(label="Champions", icon="award"),
+    sac.ButtonsItem(label="Podiums", icon="list-ol"),
+], label=None, format_func=None, align="center", size="md", radius="md", color="#4682b4", use_container_width=True)
 # ---
 
 
