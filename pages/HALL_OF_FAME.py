@@ -12,7 +12,10 @@ st.set_page_config(page_title="Hall Of Fame", page_icon="images/marlowdukesicon.
 
 # --- HIDE STREAMLIT HEADER/FOOTER MENUS ---
 hide_st_style = """ 
-	<style>MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}</style>
+	<style>MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;} 
+	[data-testid="stElementToolbar"] {display: none;} 
+	button[title="View fullscreen"] {visibility: hidden;}
+	</style>
 	"""
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
