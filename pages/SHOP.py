@@ -18,7 +18,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 
 st.image("images/shop_marlowmerchbanner.png", use_column_width=True)
 
-st.link_button(":grey[CLICK HERE TO VISIT THE STORE]", url="https://marlow-merch.myspreadshop.co.uk", use_container_width=True)
+st.link_button(":white[CLICK HERE TO VISIT THE STORE]", url="https://marlow-merch.myspreadshop.co.uk", use_container_width=True)
 #st.button(":grey[COMING SOON!!]", use_container_width=True)
 
 left, middle, right = st.columns(3)
@@ -26,6 +26,6 @@ left.image("images/shop_marlowdukesbaseballcap.png", caption="Contrast Snapback 
 middle.image("images/shop_marlowdukestshirt.png", caption="Mens T-shirt")
 right.image("images/shop_marlowdukesbuckethat.png", caption="Bucket Hat")
 
-st.link_button(":grey[CLICK HERE TO VISIT THE STORE]", url="https://marlow-merch.myspreadshop.co.uk/", use_container_width=True)
+st.link_button(":white[CLICK HERE TO VISIT THE STORE]", url="https://marlow-merch.myspreadshop.co.uk/", use_container_width=True)
 
-
+st.divider()

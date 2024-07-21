@@ -25,6 +25,7 @@ st.divider()
 # --- MENU NAVBAR ---
 stat_selection = sac.buttons(
    items=[
+    sac.ButtonsItem(label="Full Table"),
     sac.ButtonsItem(label="Most Appearances"),
     sac.ButtonsItem(label="Most Wins"),
     sac.ButtonsItem(label="Most Draws"),
@@ -35,14 +36,16 @@ stat_selection = sac.buttons(
     sac.ButtonsItem(label="Points per match"),
     sac.ButtonsItem(label="Goals per match"),
     sac.ButtonsItem(label="MOTM votes per match"),
-    sac.ButtonsItem(label="Full Table"),
     #sac.ButtonsItem(label="Board Room visits per match"),
-    sac.ButtonsItem(label="Player Analysis"),
+    sac.ButtonsItem(label="Player Analysis", icon="person-fill"),
 ], label=None, format_func=None, align="center", size="xs", radius=2, color="#4682b4", use_container_width=True)
 
 
 miss_rows = [0,1,3,39,40]
 # --- PANDAS DATA EXTRACTS ---
+# --- FULL TABLE
+df_full_tab = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name='League Table', usecols=[0,52,54,55,56,57,58,59])
+
 # --- APEARANCES
 df_appear = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,54])
 df_appear = df_appear.sort_values(by=["PLAYED", "PLAYER"], ascending=[False, True])
@@ -114,9 +117,6 @@ df_MOTM_match = df_MOTM_match.style.format({"VOTES/MATCH": "{:.3f}"})
 #df_broom_match = pd.merge(df_broom, df_appear, how="left", on=["Unnamed: 12","PLAYER"])
 #df_broom_match = pd.concat([df_broom,df_appear], axis=1)
 
-# --- FULL TABLE
-df_full_tab = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name='League Table', usecols=[0,52,54,55,56,57,58,59])
-
 # --- PLAYER ANALYSIS
 df_result_like = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,54,55,56,57])
 df_result_like["WIN %"] = (df_result_like["WON"]/df_result_like["PLAYED"])
@@ -133,6 +133,9 @@ df_play_anal = df_play_anal.style.background_gradient(cmap="Greens", subset="WIN
 
 frame_size = 1275
 # --- STREAMLIT DATAFRAME SELECTION ---
+if stat_selection == "Full Table":
+	st.dataframe(df_full_tab, width=None, height=frame_size, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","PLAYED","WON","DRAWN","LOST","G/D","PTS"], column_config={"POSITION": " ", "PLAYER": " ", "PLAYED": "P", "WON": "W", "DRAWN": "D", "LOST": "L", "G/D": "GD", "PTS": "Pts"})
+
 if stat_selection == "Most Appearances":
 	st.dataframe(df_appear, width=None, height=frame_size, use_container_width=True, hide_index=True, column_config={"PLAYED": "APPEARANCES"})
 
@@ -165,9 +168,6 @@ if stat_selection == "MOTM votes per match":
 
 #if stat_selection == "Board Room visits per match":
 #	st.dataframe(df_broom_match, width=None, height=frame_size, use_container_width=True, hide_index=True)
-
-if stat_selection == "Full Table":
-	st.dataframe(df_full_tab, width=None, height=frame_size, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","PLAYED","WON","DRAWN","LOST","G/D","PTS"], column_config={"POSITION": " ", "PLAYER": " ", "PLAYED": "P", "WON": "W", "DRAWN": "D", "LOST": "L", "G/D": "GD", "PTS": "Pts"})
 
 if stat_selection == "Player Analysis":
 	st.caption("For WIN % and LOSS % the darker the green the better. Click on column headers to sort.")
