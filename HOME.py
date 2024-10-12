@@ -4,8 +4,10 @@ import pandas as pd
 import streamlit as st
 import streamlit_antd_components as sac #--- NEEDED FOR THE 2ND NAVBAR
 import time # --- USED IN THE miles_notif NOTIFICATION FUNCTION
+import numpy as np #--- USED FOR ABS() ON THE TOTP UP/DOWN ARROW
 
 excel_file_season: str = "data/latest_data.xlsx"
+excel_file_prev: str = "data/latest_data_prev.xlsx"
 excel_file_hof: str = "data/hall_of_fame.xlsx" # --- NEEDED FOR THE miles_notif NOTIFICATION FUNCTION
 
 
@@ -45,6 +47,31 @@ menu_selection = sac.buttons(
 # --- PANDAS DATA FRAME SELECTION ---
 df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3,39,40], sheet_name='League Table', usecols=[0,52,54,58,59])
 
+# PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
+df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3,39,40], sheet_name='League Table', usecols=[0,52])
+df_ltable = df_ltable.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
+df_ltable["TOTP_CHANGE"] = (df_ltable["POSITION_prev"]-df_ltable["POSITION_curr"])
+
+# IDENTIFY UP OR DOWN ARROW TO USE
+df_ltable.loc[df_ltable["TOTP_CHANGE"] > 0, "TOTP_DIR"] = "⬆"
+df_ltable.loc[df_ltable["TOTP_CHANGE"] < 0, "TOTP_DIR"] = "⬇"
+
+# IDENTIFY HOW MANY POSITIONS RISEN OR FALLEN AND MERGE WITH THE UP/DOWN ARROW
+df_ltable["TOTP_CHANGE_ABS"] = np.abs(df_ltable["TOTP_CHANGE"])
+df_ltable.loc[df_ltable["TOTP_CHANGE_ABS"] != 0, "TOTP_FINAL"] = df_ltable["TOTP_DIR"] + df_ltable["TOTP_CHANGE_ABS"].astype(str)
+df_ltable.loc[df_ltable["TOTP_CHANGE_ABS"] == 0, "TOTP_FINAL"] = "➖"
+
+df_ltable = df_ltable.sort_values(by=["POSITION_curr", "PLAYER"], ascending=[True, False])
+
+# ADD CONDITIONAL COLOR TO THE COLUMN
+def totp_highlight(series):
+	red = "color: #EA3323"
+	green = "color: #75FB4C"
+	grey = "color: grey"
+	return [green if value.startswith("⬆") else red if value.startswith("⬇") else grey for value in series]
+df_ltable = df_ltable.style.apply(totp_highlight, subset="TOTP_FINAL")
+# ----
+
 df_goals = pd.read_excel(excel_file_season, skiprows=[0,1,3,37,38,39,40], sheet_name='Goals', usecols=[0,52])
 df_goals = df_goals.sort_values(by=["TOTAL", "PLAYER"], ascending=[False, True])
 
@@ -58,7 +85,7 @@ df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[Fa
 
 # ---  MENU SELECTION AND DF DISPLAY
 if menu_selection == "League Table":
-	st.dataframe(df_ltable, width=None, height=1275, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","PLAYED","G/D","PTS"], column_config={"POSITION": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
+	st.dataframe(df_ltable, width=None, height=1275, use_container_width=True, hide_index=True, column_order=["POSITION_curr","TOTP_FINAL","PLAYER","PLAYED","G/D","PTS"], column_config={"POSITION_curr": " ", "TOTP_FINAL": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
 
 	# --- MILESTONE NOTIFICATION FUNCTION ---
 	def miles_notif(col_metric: str) -> str:

@@ -4,8 +4,10 @@ import streamlit as st
 # from streamlit_option_menu import option_menu #--- NEEDED FOR THE FIRST NAVBAR
 import streamlit_antd_components as sac #--- NEEDED FOR THE 2ND NAVBAR
 import matplotlib #--- USED FOR THE COLOR GRADIENT ON THE PLAYER ANALYSIS TABLE
+import numpy as np #--- USED FOR ABS() ON THE TOTP UP/DOWN ARROW
 
 excel_file = "data/latest_data.xlsx"
+excel_file_prev: str = "data/latest_data_prev.xlsx"
 st.set_page_config(page_title="Statistics", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
 # --- HIDE STREAMLIT HEADER/FOOTER MENUS ---
@@ -45,6 +47,31 @@ miss_rows = [0,1,3,39,40]
 # --- PANDAS DATA EXTRACTS ---
 # --- FULL TABLE
 df_full_tab = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name='League Table', usecols=[0,52,54,55,56,57,58,59])
+
+# PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
+df_tab_prev = pd.read_excel(excel_file_prev, skiprows=miss_rows, sheet_name='League Table', usecols=[0,52])
+df_full_tab = df_full_tab.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
+df_full_tab["TOTP_CHANGE"] = (df_full_tab["POSITION_prev"]-df_full_tab["POSITION_curr"])
+
+# IDENTIFY UP OR DOWN ARROW TO USE
+df_full_tab.loc[df_full_tab["TOTP_CHANGE"] > 0, "TOTP_DIR"] = "⬆"
+df_full_tab.loc[df_full_tab["TOTP_CHANGE"] < 0, "TOTP_DIR"] = "⬇"
+
+# IDENTIFY HOW MANY POSITIONS RISEN OR FALLEN AND MERGE WITH THE UP/DOWN ARROW
+df_full_tab["TOTP_CHANGE_ABS"] = np.abs(df_full_tab["TOTP_CHANGE"])
+df_full_tab.loc[df_full_tab["TOTP_CHANGE_ABS"] != 0, "TOTP_FINAL"] = df_full_tab["TOTP_DIR"] + df_full_tab["TOTP_CHANGE_ABS"].astype(str)
+df_full_tab.loc[df_full_tab["TOTP_CHANGE_ABS"] == 0, "TOTP_FINAL"] = "➖"
+
+df_full_tab = df_full_tab.sort_values(by=["POSITION_curr", "PLAYER"], ascending=[True, False])
+
+# ADD CONDITIONAL COLOR TO THE COLUMN
+def totp_highlight(series):
+	red = "color: #EA3323"
+	green = "color: #75FB4C"
+	grey = "color: grey"
+	return [green if value.startswith("⬆") else red if value.startswith("⬇") else grey for value in series]
+df_full_tab = df_full_tab.style.apply(totp_highlight, subset="TOTP_FINAL")
+# ----
 
 # --- APEARANCES
 df_appear = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,54])
@@ -134,7 +161,7 @@ df_play_anal = df_play_anal.style.background_gradient(cmap="Greens", subset="WIN
 frame_size = 1275
 # --- STREAMLIT DATAFRAME SELECTION ---
 if stat_selection == "Full Table":
-	st.dataframe(df_full_tab, width=None, height=frame_size, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","PLAYED","WON","DRAWN","LOST","G/D","PTS"], column_config={"POSITION": " ", "PLAYER": " ", "PLAYED": "P", "WON": "W", "DRAWN": "D", "LOST": "L", "G/D": "GD", "PTS": "Pts"})
+	st.dataframe(df_full_tab, width=None, height=frame_size, use_container_width=True, hide_index=True, column_order=["POSITION_curr","TOTP_FINAL","PLAYER","PLAYED","WON","DRAWN","LOST","G/D","PTS"], column_config={"POSITION_curr": " ", "TOTP_FINAL": " ","PLAYER": " ", "PLAYED": "P", "WON": "W", "DRAWN": "D", "LOST": "L", "G/D": "GD", "PTS": "Pts"})
 
 if stat_selection == "Most Appearances":
 	st.dataframe(df_appear, width=None, height=frame_size, use_container_width=True, hide_index=True, column_config={"PLAYED": "APPEARANCES"})
