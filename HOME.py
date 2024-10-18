@@ -31,7 +31,6 @@ st.image("images/marlowdukesbanner.png", use_column_width="auto")
 st.divider()
 
 
-
 ### --- st.write("Week 16 - 23/4/2024") --- ###
 # game_week = 42
 # File_Date = "Week 42 - 16th October 2024"
@@ -77,6 +76,8 @@ df_ltable = df_ltable.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="ou
 df_ltable["TOTP_CHANGE"] = (df_ltable["POSITION_prev"]-df_ltable["POSITION_curr"])
 
 # IDENTIFY UP OR DOWN ARROW TO USE
+# df_ltable.loc[df_ltable["TOTP_CHANGE"] > 0, "TOTP_DIR"] = "⬆"
+# df_ltable.loc[df_ltable["TOTP_CHANGE"] < 0, "TOTP_DIR"] = "⬇"
 df_ltable.loc[df_ltable["TOTP_CHANGE"] > 0, "TOTP_DIR"] = "⬆"
 df_ltable.loc[df_ltable["TOTP_CHANGE"] < 0, "TOTP_DIR"] = "⬇"
 
@@ -99,15 +100,18 @@ df_ltable = df_ltable.style.apply(totp_highlight, subset="TOTP_FINAL")
 # ---- GOALS DF BUILD
 df_goals = pd.read_excel(excel_file_season, skiprows=[0,1,3,37,38,39,40], sheet_name='Goals', usecols=[0,52])
 df_goals = df_goals.sort_values(by=["TOTAL", "PLAYER"], ascending=[False, True])
+df_goals.insert(0, "POSITION", range(1, 1 + len(df_goals)))
 
 # ---- MOTM DF BUILD
 df_motm = pd.read_excel(excel_file_season, skiprows=[1,35,36,37,38,39], sheet_name='MOTM', usecols=[0,52])
 df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
+df_motm.insert(0, "POSITION", range(1, 1 + len(df_motm)))
 
 # ---- BOARDROOM DF BUILD
 df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=19, sheet_name='Board Room', usecols=[12,13]).fillna(0)
 df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
 df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
+df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
 
 
 # ---  MENU SELECTION AND DF DISPLAY
@@ -145,11 +149,11 @@ if menu_selection == "League Table":
 	miles_notif(col_metric = "WON")
 
 if menu_selection == "Goals":
-	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"TOTAL": "GOALS"})
+	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"POSITION": " ","TOTAL": "GOALS"})
 if menu_selection == "MOTM":
-	st.dataframe(df_motm, width=None, height=1225, use_container_width=True, hide_index=True)
+	st.dataframe(df_motm, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"POSITION": " "})
 if menu_selection == "Board Room":
-	st.dataframe(df_broom, width=None, height=750, use_container_width=True, hide_index=True, column_config={"Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
+	st.dataframe(df_broom, width=None, height=750, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
 
 st.divider()
 
@@ -163,3 +167,5 @@ st.divider()
 
 # st.title("Title Marlow Dukes") --- st.header("This is a header") --- st.subheader("Sub Header") --- st.markdown("data correct as of ...")
 
+# MODIFYING A COLUMN WIDTH (small, medium or large)
+# "WON": st.column_config.Column(width="small"), 
