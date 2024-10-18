@@ -5,6 +5,12 @@ import streamlit as st
 import streamlit_antd_components as sac #--- NEEDED FOR THE 2ND NAVBAR
 import matplotlib #--- USED FOR THE COLOR GRADIENT ON THE PLAYER ANALYSIS TABLE
 import numpy as np #--- USED FOR ABS() ON THE TOTP UP/DOWN ARROW
+import sys
+from variables import *
+
+# --- SETTING THE PYTHON PATH SO THAT VARIABLES CAN BE IMPORTED FROM variables.py
+sys.path.insert(0, "../")
+
 
 excel_file = "data/latest_data.xlsx"
 excel_file_prev: str = "data/latest_data_prev.xlsx"
@@ -45,9 +51,29 @@ stat_selection = sac.buttons(
 
 miss_rows = [0,1,3,39,40]
 # --- PANDAS DATA EXTRACTS ---
-# --- FULL TABLE
-df_full_tab = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name='League Table', usecols=[0,52,54,55,56,57,58,59])
+# --- FULL TABLE WITH TOTP UP/DOWN ARROW
+formguide_stat_cols=[0,52,54,55,56,57,58,59,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
+df_full_tab = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name='League Table', usecols=formguide_stat_cols)
 
+def form_guide(game_week):
+	i = game_week - 4
+	match = 5
+	while i <= game_week:
+		df_full_tab.loc[df_full_tab["WK "+str(i)] > 0, "WK-"+str(match)] = "🟢"
+		df_full_tab.loc[df_full_tab["WK "+str(i)] < 0, "WK-"+str(match)] = "🔴"
+		df_full_tab.loc[df_full_tab["WK "+str(i)] == 0, "WK-"+str(match)] = "⚪"
+		df_full_tab.loc[df_full_tab["WK "+str(i)].isnull(), "WK-"+str(match)] = "➖"
+		i = i + 1
+		match = match - 1
+	return
+
+form_guide(game_week)
+
+df_full_tab["FORM"] = df_full_tab["WK-1"]+"  "+df_full_tab["WK-2"]+df_full_tab["WK-3"]+df_full_tab["WK-4"]+df_full_tab["WK-5"]
+
+
+# ----
+# CREATING THE TOTP UP/DOWN COLUMN
 # PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
 df_tab_prev = pd.read_excel(excel_file_prev, skiprows=miss_rows, sheet_name='League Table', usecols=[0,52])
 df_full_tab = df_full_tab.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
@@ -161,7 +187,7 @@ df_play_anal = df_play_anal.style.background_gradient(cmap="Greens", subset="WIN
 frame_size = 1275
 # --- STREAMLIT DATAFRAME SELECTION ---
 if stat_selection == "Full Table":
-	st.dataframe(df_full_tab, width=None, height=frame_size, use_container_width=True, hide_index=True, column_order=["POSITION_curr","TOTP_FINAL","PLAYER","PLAYED","WON","DRAWN","LOST","G/D","PTS"], column_config={"POSITION_curr": " ", "TOTP_FINAL": " ","PLAYER": " ", "PLAYED": "P", "WON": "W", "DRAWN": "D", "LOST": "L", "G/D": "GD", "PTS": "Pts"})
+	st.dataframe(df_full_tab, width=None, height=frame_size, use_container_width=True, hide_index=True, column_order=["POSITION_curr","TOTP_FINAL","PLAYER","PLAYED","WON","DRAWN","LOST","G/D","PTS","FORM"], column_config={"POSITION_curr": " ", "TOTP_FINAL": " ", "PLAYER": " ", "PLAYED": "P", "WON": "W", "DRAWN": "D", "LOST": "L", "G/D": "GD", "PTS": "Pts"})
 
 if stat_selection == "Most Appearances":
 	st.dataframe(df_appear, width=None, height=frame_size, use_container_width=True, hide_index=True, column_config={"PLAYED": "APPEARANCES"})
@@ -216,3 +242,6 @@ st.divider()
 # st.markdown(col_list)
 
 #.map("{:,.3f}".format)
+
+# MODIFYING A COLUMN WIDTH (small, medium or large)
+# "WON": st.column_config.Column(width="small"), 

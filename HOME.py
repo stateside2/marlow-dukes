@@ -1,10 +1,10 @@
 
-
 import pandas as pd
 import streamlit as st
-import streamlit_antd_components as sac #--- NEEDED FOR THE 2ND NAVBAR
+import streamlit_antd_components as sac #--- NEEDED FOR THE NAVBAR
 import time # --- USED IN THE miles_notif NOTIFICATION FUNCTION
 import numpy as np #--- USED FOR ABS() ON THE TOTP UP/DOWN ARROW
+from variables import *
 
 excel_file_season: str = "data/latest_data.xlsx"
 excel_file_prev: str = "data/latest_data_prev.xlsx"
@@ -13,7 +13,7 @@ excel_file_hof: str = "data/hall_of_fame.xlsx" # --- NEEDED FOR THE miles_notif 
 
 st.set_page_config(page_title="Marlow Dukes", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
-# --- HIDE STREAMLIT HEADER/FOOTER MENUS ---
+# --- HIDE 1) STREAMLIT HEADER/FOOTER MENUS, 2) POP-UP DOWNLOAD, SEARCH, EXPAND DATAFRAME ELEMENTS, 3) EXPAND IMAGE  ---
 hide_st_style = """ 
 	<style>MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;} 
 	[data-testid="stElementToolbar"] {display: none;} 
@@ -23,15 +23,19 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
 
+
 # --- BANNER IMAGE
 st.image("images/marlowdukesbanner.png", use_column_width="auto")
 #st.success("Congratulation to the 2023 WINNERS!!", icon=None)
 #st.success("League: xxx, Goals: xxx, MOTM: xxx, Board Room: xxx", icon=None)
 st.divider()
 
-# st.write("Week 16 - 23/4/2024")
-File_Date = "Week 42 - 16th October 2024"
 
+
+### --- st.write("Week 16 - 23/4/2024") --- ###
+# game_week = 42
+# File_Date = "Week 42 - 16th October 2024"
+### ---
 
 # --- MENU NAVBAR --- 
 menu_selection = sac.buttons(
@@ -43,10 +47,30 @@ menu_selection = sac.buttons(
 ], label=File_Date, format_func=None, align="center", size="md", radius="md", color="#4682b4", use_container_width=True)
 # ---
 
-
 # --- PANDAS DATA FRAME SELECTION ---
-df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3,39,40], sheet_name='League Table', usecols=[0,52,54,58,59])
+# --- HOME/LEAGUE TABLE DF BUILD
+formguide_home_cols=[0,52,54,58,59,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
+df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3,39,40], sheet_name='League Table', usecols=formguide_home_cols)
 
+def form_guide(game_week):
+	i = game_week - 4
+	match = 5
+	while i <= game_week:
+		df_ltable.loc[df_ltable["WK "+str(i)] > 0, "WK-"+str(match)] = "🟢"
+		df_ltable.loc[df_ltable["WK "+str(i)] < 0, "WK-"+str(match)] = "🔴"
+		df_ltable.loc[df_ltable["WK "+str(i)] == 0, "WK-"+str(match)] = "⚪"
+		df_ltable.loc[df_ltable["WK "+str(i)].isnull(), "WK-"+str(match)] = "➖"
+		i = i + 1
+		match = match - 1
+	return
+	
+form_guide(game_week)
+
+df_ltable["FORM"] = df_ltable["WK-1"]+"  "+df_ltable["WK-2"]+df_ltable["WK-3"]+df_ltable["WK-4"]+df_ltable["WK-5"]
+
+
+# ----
+# CREATING THE TOTP UP/DOWN COLUMN
 # PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
 df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3,39,40], sheet_name='League Table', usecols=[0,52])
 df_ltable = df_ltable.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
@@ -63,7 +87,7 @@ df_ltable.loc[df_ltable["TOTP_CHANGE_ABS"] == 0, "TOTP_FINAL"] = "➖"
 
 df_ltable = df_ltable.sort_values(by=["POSITION_curr", "PLAYER"], ascending=[True, False])
 
-# ADD CONDITIONAL COLOR TO THE COLUMN
+# ADD CONDITIONAL COLOR TO THE TOTP COLUMN
 def totp_highlight(series):
 	red = "color: #EA3323"
 	green = "color: #75FB4C"
@@ -72,12 +96,15 @@ def totp_highlight(series):
 df_ltable = df_ltable.style.apply(totp_highlight, subset="TOTP_FINAL")
 # ----
 
+# ---- GOALS DF BUILD
 df_goals = pd.read_excel(excel_file_season, skiprows=[0,1,3,37,38,39,40], sheet_name='Goals', usecols=[0,52])
 df_goals = df_goals.sort_values(by=["TOTAL", "PLAYER"], ascending=[False, True])
 
+# ---- MOTM DF BUILD
 df_motm = pd.read_excel(excel_file_season, skiprows=[1,35,36,37,38,39], sheet_name='MOTM', usecols=[0,52])
 df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
 
+# ---- BOARDROOM DF BUILD
 df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=19, sheet_name='Board Room', usecols=[12,13]).fillna(0)
 df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
 df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
@@ -85,7 +112,7 @@ df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[Fa
 
 # ---  MENU SELECTION AND DF DISPLAY
 if menu_selection == "League Table":
-	st.dataframe(df_ltable, width=None, height=1275, use_container_width=True, hide_index=True, column_order=["POSITION_curr","TOTP_FINAL","PLAYER","PLAYED","G/D","PTS"], column_config={"POSITION_curr": " ", "TOTP_FINAL": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
+	st.dataframe(df_ltable, width=None, height=1275, use_container_width=True, hide_index=True, column_order=["POSITION_curr","TOTP_FINAL","PLAYER","PLAYED","G/D","PTS","FORM"], column_config={"POSITION_curr": " ", "TOTP_FINAL": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
 
 	# --- MILESTONE NOTIFICATION FUNCTION ---
 	def miles_notif(col_metric: str) -> str:
@@ -123,7 +150,6 @@ if menu_selection == "MOTM":
 	st.dataframe(df_motm, width=None, height=1225, use_container_width=True, hide_index=True)
 if menu_selection == "Board Room":
 	st.dataframe(df_broom, width=None, height=750, use_container_width=True, hide_index=True, column_config={"Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
-
 
 st.divider()
 
