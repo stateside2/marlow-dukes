@@ -23,18 +23,15 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
 
+# --- WINTER / XMAS UPDATE
+st.snow() 
+st.toast("MERRY CHRISTMAS DUKES ... Enjoy the holidays", icon="🎁")
 
 # --- BANNER IMAGE
 st.image("images/marlowdukesbanner.png", use_column_width="auto")
 #st.success("Congratulation to the 2023 WINNERS!!", icon=None)
 #st.success("League: xxx, Goals: xxx, MOTM: xxx, Board Room: xxx", icon=None)
 st.divider()
-
-
-### --- st.write("Week 16 - 23/4/2024") --- ###
-# game_week = 42
-# File_Date = "Week 42 - 16th October 2024"
-### ---
 
 # --- MENU NAVBAR --- 
 menu_selection = sac.buttons(
