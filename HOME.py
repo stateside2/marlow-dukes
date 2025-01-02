@@ -24,8 +24,8 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
 
 # --- WINTER / XMAS UPDATE
-st.snow() 
-st.toast("MERRY CHRISTMAS DUKES ... Enjoy the holidays", icon="🎁")
+# st.snow() 
+# st.toast("MERRY CHRISTMAS DUKES ... Enjoy the holidays", icon="🎁")
 
 # --- BANNER IMAGE
 st.image("images/marlowdukesbanner.png", use_column_width="auto")
