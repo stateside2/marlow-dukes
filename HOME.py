@@ -23,10 +23,6 @@ hide_st_style = """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
 
-# --- WINTER / XMAS UPDATE
-# st.snow() 
-# st.toast("MERRY CHRISTMAS DUKES ... Enjoy the holidays", icon="🎁")
-
 # --- BANNER IMAGE
 st.image("images/marlowdukesbanner.png", use_column_width="auto")
 #st.success("Congratulation to the 2023 WINNERS!!", icon=None)
@@ -45,30 +41,35 @@ menu_selection = sac.buttons(
 
 # --- PANDAS DATA FRAME SELECTION ---
 # --- HOME/LEAGUE TABLE DF BUILD
-formguide_home_cols=[0,52,54,58,59,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
+
+# --- WEEK5UPDATE --- REMOVED UNTIL WEEK 5
+# formguide_home_cols=[0,52,54,58,59,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
+
+formguide_home_cols=[0,50,51,55,56]
 df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3,39,40], sheet_name='League Table', usecols=formguide_home_cols)
 
-def form_guide(game_week):
-	i = game_week - 4
-	match = 5
-	while i <= game_week:
-		df_ltable.loc[df_ltable["WK "+str(i)] > 0, "WK-"+str(match)] = "🟢"
-		df_ltable.loc[df_ltable["WK "+str(i)] < 0, "WK-"+str(match)] = "🔴"
-		df_ltable.loc[df_ltable["WK "+str(i)] == 0, "WK-"+str(match)] = "⚪"
-		df_ltable.loc[df_ltable["WK "+str(i)].isnull(), "WK-"+str(match)] = "➖"
-		i = i + 1
-		match = match - 1
-	return
+# --- WEEK5UPDATE --- REMOVED UNTIL WEEK 5
+# def form_guide_league(game_week):
+# 	i = game_week - 4
+# 	match = 5
+# 	while i <= game_week:
+# 		df_ltable.loc[df_ltable["WK "+str(i)] > 0, "WK-"+str(match)] = "🟢"
+# 		df_ltable.loc[df_ltable["WK "+str(i)] < 0, "WK-"+str(match)] = "🔴"
+# 		df_ltable.loc[df_ltable["WK "+str(i)] == 0, "WK-"+str(match)] = "⚪"
+# 		df_ltable.loc[df_ltable["WK "+str(i)].isnull(), "WK-"+str(match)] = "➖"
+# 		i = i + 1
+# 		match = match - 1
+# 	return
 	
-form_guide(game_week)
+# form_guide_league(game_week)
 
-df_ltable["FORM"] = df_ltable["WK-1"]+"  "+df_ltable["WK-2"]+df_ltable["WK-3"]+df_ltable["WK-4"]+df_ltable["WK-5"]
-
+# df_ltable["FORM"] = df_ltable["WK-1"]+"  "+df_ltable["WK-2"]+df_ltable["WK-3"]+df_ltable["WK-4"]+df_ltable["WK-5"]
+# ----
 
 # ----
 # CREATING THE TOTP UP/DOWN COLUMN
 # PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
-df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3,39,40], sheet_name='League Table', usecols=[0,52])
+df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3,39,40], sheet_name='League Table', usecols=[0,50])
 df_ltable = df_ltable.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
 df_ltable["TOTP_CHANGE"] = (df_ltable["POSITION_prev"]-df_ltable["POSITION_curr"])
 
@@ -84,6 +85,7 @@ df_ltable.loc[df_ltable["TOTP_CHANGE_ABS"] != 0, "TOTP_FINAL"] = df_ltable["TOTP
 df_ltable.loc[df_ltable["TOTP_CHANGE_ABS"] == 0, "TOTP_FINAL"] = "➖"
 
 df_ltable = df_ltable.sort_values(by=["POSITION_curr", "PLAYER"], ascending=[True, False])
+df_ltable.insert(0, "POSITION", range(1, 1 + len(df_ltable)))
 
 # ADD CONDITIONAL COLOR TO THE TOTP COLUMN
 def totp_highlight(series):
@@ -105,21 +107,21 @@ df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
 df_motm.insert(0, "POSITION", range(1, 1 + len(df_motm)))
 
 # ---- BOARDROOM DF BUILD
-df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=22, sheet_name='Board Room', usecols=[12,13]).fillna(0)
-df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
-df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
-df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
+# df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=22, sheet_name='Board Room', usecols=[12,13]).fillna(0)
+# df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
+# df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
+# df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
 
 
 # ---  MENU SELECTION AND DF DISPLAY
 if menu_selection == "League Table":
-	st.dataframe(df_ltable, width=None, height=1275, use_container_width=True, hide_index=True, column_order=["POSITION_curr","TOTP_FINAL","PLAYER","PLAYED","G/D","PTS","FORM"], column_config={"POSITION_curr": " ", "TOTP_FINAL": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
+	st.dataframe(df_ltable, width=None, height=1275, use_container_width=True, hide_index=True, column_order=["POSITION","TOTP_FINAL","PLAYER","PLAYED","G/D","PTS","FORM"], column_config={"POSITION": " ", "TOTP_FINAL": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
 
 	# --- MILESTONE NOTIFICATION FUNCTION ---
 	def miles_notif(col_metric: str) -> str:
 		# --- ALL-TIME DATAFRAME BUILD FOR NOTIFICATION FUNCTION
 		miss_rows: list[int] = [0,1,3,39,40]
-		df_season_full_tab = pd.read_excel(excel_file_season, skiprows=miss_rows, sheet_name='League Table', usecols=[0,54,55,56,57,58,59]) # --- DROP POSITION COLUMN
+		df_season_full_tab = pd.read_excel(excel_file_season, skiprows=miss_rows, sheet_name='League Table', usecols=[0,50,51,52,53,54,55]) # --- DROP POSITION COLUMN
 		df_hof_full_tab = pd.read_excel(excel_file_hof, sheet_name="ALL TIME TABLE", skiprows=[0], usecols=[1,2,3,4,5,6,7])
 		df_at_full_tab = df_season_full_tab.join(df_hof_full_tab.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_season", rsuffix="_hof")
 		df_at_full_tab = df_at_full_tab.fillna(0)
@@ -149,8 +151,8 @@ if menu_selection == "Goals":
 	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"POSITION": " ","TOTAL": "GOALS"})
 if menu_selection == "MOTM":
 	st.dataframe(df_motm, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"POSITION": " "})
-if menu_selection == "Board Room":
-	st.dataframe(df_broom, width=None, height=820, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
+# if menu_selection == "Board Room":
+	# st.dataframe(df_broom, width=None, height=820, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
 
 st.divider()
 
