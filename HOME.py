@@ -74,8 +74,6 @@ df_ltable = df_ltable.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="ou
 df_ltable["TOTP_CHANGE"] = (df_ltable["POSITION_prev"]-df_ltable["POSITION_curr"])
 
 # IDENTIFY UP OR DOWN ARROW TO USE
-# df_ltable.loc[df_ltable["TOTP_CHANGE"] > 0, "TOTP_DIR"] = "⬆"
-# df_ltable.loc[df_ltable["TOTP_CHANGE"] < 0, "TOTP_DIR"] = "⬇"
 df_ltable.loc[df_ltable["TOTP_CHANGE"] > 0, "TOTP_DIR"] = "⬆"
 df_ltable.loc[df_ltable["TOTP_CHANGE"] < 0, "TOTP_DIR"] = "⬇"
 
@@ -107,10 +105,10 @@ df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
 df_motm.insert(0, "POSITION", range(1, 1 + len(df_motm)))
 
 # ---- BOARDROOM DF BUILD
-# df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=22, sheet_name='Board Room', usecols=[12,13]).fillna(0)
-# df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
-# df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
-# df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
+df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=22, sheet_name='Board Room', usecols=[12,13]).fillna(0)
+df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
+df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
+df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
 
 
 # ---  MENU SELECTION AND DF DISPLAY
@@ -151,8 +149,8 @@ if menu_selection == "Goals":
 	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"POSITION": " ","TOTAL": "GOALS"})
 if menu_selection == "MOTM":
 	st.dataframe(df_motm, width=None, height=1225, use_container_width=True, hide_index=True, column_config={"POSITION": " "})
-# if menu_selection == "Board Room":
-	# st.dataframe(df_broom, width=None, height=820, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
+if menu_selection == "Board Room":
+	st.dataframe(df_broom, width=None, height=185, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
 
 st.divider()
 
