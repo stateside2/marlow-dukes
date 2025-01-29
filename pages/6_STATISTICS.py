@@ -44,7 +44,7 @@ stat_selection = sac.buttons(
 ], label=None, format_func=None, align="center", size="xs", radius=2, color="#4682b4", use_container_width=True)
 
 
-miss_rows = [0,1,3,39,40]
+miss_rows = [0,1,3,40,41]
 # --- PANDAS DATA EXTRACTS ---
 # --- FULL TABLE WITH TOTP UP/DOWN ARROW
 
@@ -177,7 +177,7 @@ df_play_anal = df_play_anal.style.background_gradient(cmap="Greens", subset="WIN
 .format({"WIN %": "{:.3f}", "DRAW %": "{:.3f}", "LOSS %": "{:.3f}", "GOALS/MATCH": "{:.3f}"})  #--- IMPORT MATPLOTLIB
 
 
-frame_size = 1275
+frame_size = 1300
 # --- STREAMLIT DATAFRAME SELECTION ---
 if stat_selection == "Full Table":
 	st.dataframe(df_full_tab, width=None, height=frame_size, use_container_width=True, hide_index=True, column_order=["POSITION","TOTP_FINAL","PLAYER","PLAYED","WON","DRAWN","LOST","G/D","PTS","FORM"], column_config={"POSITION": " ", "TOTP_FINAL": " ", "PLAYER": " ", "PLAYED": "P", "WON": "W", "DRAWN": "D", "LOST": "L", "G/D": "GD", "PTS": "Pts"})
