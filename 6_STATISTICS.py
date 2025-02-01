@@ -14,7 +14,9 @@ sys.path.insert(0, "../")
 
 excel_file = "data/latest_data.xlsx"
 excel_file_prev: str = "data/latest_data_prev.xlsx"
-st.set_page_config(page_title="Statistics", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
+
+# --- THIS IS NOW SET IN THE NAVIGATE.py PAGE
+# st.set_page_config(page_title="Statistics", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
 # --- HIDE STREAMLIT HEADER/FOOTER MENUS ---
 hide_st_style = """ 
@@ -27,7 +29,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
 
 # --- BANNER IMAGE
-st.image("images/marlowdukesbannerSTATS.png", use_column_width="auto") # --- CREATE NEW BANNER FOR STATS PAGE
+st.image("images/marlowdukesbannerSTATS.png", use_container_width="auto") # --- CREATE NEW BANNER FOR STATS PAGE
 st.divider()
 
 # --- MENU NAVBAR ---

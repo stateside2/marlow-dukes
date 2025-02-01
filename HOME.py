@@ -10,8 +10,8 @@ excel_file_season: str = "data/latest_data.xlsx"
 excel_file_prev: str = "data/latest_data_prev.xlsx"
 excel_file_hof: str = "data/hall_of_fame.xlsx" # --- NEEDED FOR THE miles_notif NOTIFICATION FUNCTION
 
-
-st.set_page_config(page_title="Marlow Dukes", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
+# --- THIS IS NOW SET IN THE NAVIGATE.py PAGE
+# st.set_page_config(page_title="Marlow Dukes", page_icon="images/marlowdukesicon.png", layout="centered", initial_sidebar_state="auto", menu_items=None)
 
 # --- HIDE 1) STREAMLIT HEADER/FOOTER MENUS, 2) POP-UP DOWNLOAD, SEARCH, EXPAND DATAFRAME ELEMENTS, 3) EXPAND IMAGE  ---
 hide_st_style = """ 
@@ -24,7 +24,7 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 # ----
 
 # --- BANNER IMAGE
-st.image("images/marlowdukesbanner.png", use_column_width="auto")
+st.image("images/marlowdukesbanner.png", use_container_width="auto")
 #st.success("Congratulation to the 2023 WINNERS!!", icon=None)
 #st.success("League: xxx, Goals: xxx, MOTM: xxx, Board Room: xxx", icon=None)
 st.divider()
