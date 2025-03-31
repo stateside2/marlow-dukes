@@ -19,6 +19,7 @@ with st.sidebar:
 
 	st.subheader("Other")
 	st.page_link(page="https://www.marlowdukes.co.uk", label="BRAND PAGE", icon=":material/sell:")
+	st.page_link(page="https://fantasy.premierleague.com/leagues/665671/standings/c", label="FANTASY LEAGUE", icon=":material/table_rows_narrow:")
 	st.page_link(page="https://marlow-merch.myspreadshop.co.uk/", label="SHOP", icon=":material/storefront:")
 
 	st.write("---")
