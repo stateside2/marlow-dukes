@@ -50,6 +50,7 @@ df_hof_champs["SEASON"] = df_hof_champs["SEASON"].astype(str) #--- CONVERTS 2,02
 
 
 # --- ALL-TIME TABLE BUILD FUNCTION
+@st.cache_data
 def df_at_full_tab_build() -> None:
 	miss_rows: list[int] = [0,1,3,39,40]
 	df_season_full_tab = pd.read_excel(excel_file_season, skiprows=miss_rows, sheet_name='League Table', usecols=[0,51,52,53,54,55,56]) # --- DROP POSITION COLUMN
@@ -71,6 +72,7 @@ def df_at_full_tab_build() -> None:
 df_at_full_tab = df_at_full_tab_build()
 
 #--- 1.4
+@st.cache_data
 def df_at_var_tab_build(sheet_name: str) -> None:
 	if sheet_name == "Goals":
 		df_season_goals_tab = pd.read_excel(excel_file_season, skiprows=[0,1,3,37,38,39,40], sheet_name='Goals', usecols=[0,52])
@@ -103,12 +105,14 @@ def race_chart(button_name: str, target_link: str) -> None:
 # ---
 
 # --- PODIUM PAGE TABLES BUILD FUNCTION ---
+@st.cache_data
 def podium_table_build(skip_row_list: list[int]) -> None:
 	df_hof_podium = pd.read_excel(excel_file_hof, sheet_name="TOP3", skiprows=skip_row_list, nrows=3, usecols=[0,1,2,6,7])
 	st.dataframe(df_hof_podium, width=None, height=142, use_container_width=True, hide_index=True, column_config={"PLAYED": "P", "POINTS": "Pts"})
 # ---
 
 # --- RATIO TABLE BUILD FUNCTION ---
+@st.cache_data
 def ratio_table_build(ratio: str, new_col_name: str) -> None:
 	global df_at_full_tab
 	df_at_full_tab = df_at_full_tab.sort_values(by=[ratio, "PLAYER"], ascending=[False, True])

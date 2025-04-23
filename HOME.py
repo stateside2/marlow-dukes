@@ -48,6 +48,7 @@ formguide_home_cols=[0,50,51,55,56,(game_week-4),(game_week-3),(game_week-2),(ga
 # formguide_home_cols=[0,50,51,55,56]
 df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3,40,41], sheet_name='League Table', usecols=formguide_home_cols)
 
+
 # --- WEEK5UPDATE --- REMOVED UNTIL WEEK 5
 def form_guide_league(game_week):
 	i = game_week - 4
@@ -87,6 +88,7 @@ df_ltable.insert(0, "POSITION", range(1, 1 + len(df_ltable)))
 
 
 # ADD CONDITIONAL COLOR TO THE TOTP COLUMN
+@st.cache_data
 def totp_highlight(series):
 	red = "color: #EA3323"
 	green = "color: #75FB4C"
