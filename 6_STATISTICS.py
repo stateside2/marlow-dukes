@@ -53,6 +53,7 @@ miss_rows = [0,1,3,40,41]
 # --- WEEK 5 UPDATE
 #formguide_stat_cols=[0,50,51,52,53,54,55,56,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
 
+
 formguide_stat_cols=[0,50,51,52,53,54,55,56]
 df_full_tab = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name='League Table', usecols=formguide_stat_cols)
 
@@ -89,7 +90,11 @@ df_full_tab["TOTP_CHANGE_ABS"] = np.abs(df_full_tab["TOTP_CHANGE"])
 df_full_tab.loc[df_full_tab["TOTP_CHANGE_ABS"] != 0, "TOTP_FINAL"] = df_full_tab["TOTP_DIR"] + df_full_tab["TOTP_CHANGE_ABS"].astype(str)
 df_full_tab.loc[df_full_tab["TOTP_CHANGE_ABS"] == 0, "TOTP_FINAL"] = "➖"
 
-df_full_tab = df_full_tab.sort_values(by=["POSITION_curr", "PLAYER"], ascending=[True, False])
+# POSITION COLUMN IN THE SPREADSHEET IS INCORRECT (DUE TO HIDDEN ROWS) SO NEED TO DETERMINE THE SORTING MYSELF
+# df_full_tab = df_full_tab.sort_values(by=["POSITION_curr", "PLAYER"], ascending=[True, False])
+df_full_tab = df_full_tab.sort_values(by=["PTS", "G/D"], ascending=[False, False])
+
+# THIS ADDS THE POSITOIN COLUMN
 df_full_tab.insert(0, "POSITION", range(1, 1 + len(df_full_tab)))
 
 # ADD CONDITIONAL COLOR TO THE COLUMN
