@@ -103,7 +103,7 @@ df_ltable = df_ltable.style.apply(totp_highlight, subset="TOTP_FINAL")
 
 # ---  MENU SELECTION AND DF DISPLAY
 if menu_selection == "League Table":
-	st.dataframe(df_ltable, width=None, height=1300, use_container_width=True, hide_index=True, column_order=["POSITION","TOTP_FINAL","PLAYER","PLAYED","G/D","PTS","FORM"], column_config={"POSITION": " ", "TOTP_FINAL": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
+	st.dataframe(df_ltable, width=None, height=1297, use_container_width=True, hide_index=True, column_order=["POSITION","TOTP_FINAL","PLAYER","PLAYED","G/D","PTS","FORM"], column_config={"POSITION": " ", "TOTP_FINAL": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
 
 	# --- MILESTONE NOTIFICATION FUNCTION ---
 	def miles_notif(col_metric: str) -> str:
@@ -158,7 +158,7 @@ df_goals.insert(0, "POSITION", range(1, 1 + len(df_goals)))
 
 
 # ---- MOTM DF BUILD
-df_motm = pd.read_excel(excel_file_season, skiprows=[1,36,37,38,39,40], sheet_name='MOTM', usecols=[0,52])
+df_motm = pd.read_excel(excel_file_season, skiprows=0, nrows=34, sheet_name='MOTM', usecols=[0,52])
 df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
 df_motm.insert(0, "POSITION", range(1, 1 + len(df_motm)))
 
@@ -172,7 +172,7 @@ df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
 if menu_selection == "Goals":
 	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","TOTAL","FORM"], column_config={"POSITION": " ","TOTAL": "GOALS"})
 if menu_selection == "MOTM":
-	st.dataframe(df_motm, width=None, height=1230, use_container_width=True, hide_index=True, column_config={"POSITION": " "})
+	st.dataframe(df_motm, width=None, height=1228, use_container_width=True, hide_index=True, column_config={"POSITION": " "})
 if menu_selection == "Board Room":
 	st.dataframe(df_broom, width=None, height=842, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
 
