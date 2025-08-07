@@ -163,7 +163,7 @@ df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
 df_motm.insert(0, "POSITION", range(1, 1 + len(df_motm)))
 
 # ---- BOARDROOM DF BUILD
-df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=23, sheet_name='Board Room', usecols=[12,13]).fillna(0)
+df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=25, sheet_name='Board Room', usecols=[12,13]).fillna(0)
 df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
 df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
 df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
@@ -174,7 +174,7 @@ if menu_selection == "Goals":
 if menu_selection == "MOTM":
 	st.dataframe(df_motm, width=None, height=1228, use_container_width=True, hide_index=True, column_config={"POSITION": " "})
 if menu_selection == "Board Room":
-	st.dataframe(df_broom, width=None, height=842, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
+	st.dataframe(df_broom, width=None, height=913, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
 
 st.divider()
 
