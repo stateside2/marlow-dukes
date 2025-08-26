@@ -83,6 +83,7 @@ df_ltable["TOTP_CHANGE_ABS"] = np.abs(df_ltable["TOTP_CHANGE"])
 df_ltable.loc[df_ltable["TOTP_CHANGE_ABS"] != 0, "TOTP_FINAL"] = df_ltable["TOTP_DIR"] + df_ltable["TOTP_CHANGE_ABS"].astype(str)
 df_ltable.loc[df_ltable["TOTP_CHANGE_ABS"] == 0, "TOTP_FINAL"] = "➖"
 
+
 # POSITION COLUMN IN THE SPREADSHEET IS INCORRECT (DUE TO HIDDEN ROWS) SO NEED TO DETERMINE THE SORTING MYSELF
 # df_ltable = df_ltable.sort_values(by=["POSITION_curr", "PLAYER"], ascending=[True, False])
 df_ltable = df_ltable.sort_values(by=["PTS", "G/D"], ascending=[False, False])
