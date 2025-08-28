@@ -44,9 +44,7 @@ menu_selection = sac.buttons(
 
 # --- WEEK5UPDATE --- REMOVED UNTIL WEEK 5
 formguide_home_cols=[0,50,51,55,56,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
-
-# formguide_home_cols=[0,50,51,55,56]
-df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3,40,41], sheet_name='League Table', usecols=formguide_home_cols)
+df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3], nrows=36, sheet_name='League Table', usecols=formguide_home_cols, dtype={"WK "+str(game_week): "Int64", "WK "+str(game_week-1): "Int64", "WK "+str(game_week-2): "Int64", "WK "+str(game_week-3): "Int64", "WK "+str(game_week-4): "Int64"})
 
 
 # --- WEEK5UPDATE --- REMOVED UNTIL WEEK 5
@@ -64,15 +62,18 @@ def form_guide_league(game_week):
 	
 form_guide_league(game_week)
 
+
 df_ltable["FORM"] = df_ltable["WK-1"]+"  "+df_ltable["WK-2"]+df_ltable["WK-3"]+df_ltable["WK-4"]+df_ltable["WK-5"]
 # ----
+
 
 # ----
 # CREATING THE TOTP UP/DOWN COLUMN
 # PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
-df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3,40,41], sheet_name='League Table', usecols=[0,50])
+df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3], nrows=36, sheet_name='League Table', usecols=[0,50], dtype={"POSITION": "int64"})
 df_ltable = df_ltable.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
 df_ltable["TOTP_CHANGE"] = (df_ltable["POSITION_prev"]-df_ltable["POSITION_curr"])
+
 
 # IDENTIFY UP OR DOWN ARROW TO USE
 df_ltable.loc[df_ltable["TOTP_CHANGE"] > 0, "TOTP_DIR"] = "⬆"
@@ -84,12 +85,14 @@ df_ltable.loc[df_ltable["TOTP_CHANGE_ABS"] != 0, "TOTP_FINAL"] = df_ltable["TOTP
 df_ltable.loc[df_ltable["TOTP_CHANGE_ABS"] == 0, "TOTP_FINAL"] = "➖"
 
 
+
 # POSITION COLUMN IN THE SPREADSHEET IS INCORRECT (DUE TO HIDDEN ROWS) SO NEED TO DETERMINE THE SORTING MYSELF
 # df_ltable = df_ltable.sort_values(by=["POSITION_curr", "PLAYER"], ascending=[True, False])
 df_ltable = df_ltable.sort_values(by=["PTS", "G/D"], ascending=[False, False])
 
 # THIS ADDS THE POSITOIN COLUMN
 df_ltable.insert(0, "POSITION", range(1, 1 + len(df_ltable)))
+
 
 # ADD CONDITIONAL COLOR TO THE TOTP COLUMN
 # @st.cache_data
