@@ -126,10 +126,10 @@ if menu_selection == "League Table":
 		mst_name: str = df_at_full_tab[df_at_full_tab[col_metric].isin(milestones)]["PLAYER"].tolist()
 		number: int = df_at_full_tab[df_at_full_tab["PLAYER"].isin(mst_name)][col_metric].tolist()
 		for mst_name, number in zip(mst_name, number):
-			if col_metric == "PLAYED":
+			if (col_metric == "PLAYED" and mst_name != "KHEN"):
 				st.toast(f"Congratulations, {mst_name} ... {number:.0f} all-time appearances!", icon="⭐")
 				time.sleep(2)
-			if col_metric == "LOST":
+			if (col_metric == "LOST" and mst_name != "TANGO"):
 				st.toast(f"UH-OH {mst_name} ... {number:.0f} all-time losses.", icon="❗")
 				time.sleep(2)
 			if col_metric == "WON":
@@ -167,7 +167,7 @@ df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
 df_motm.insert(0, "POSITION", range(1, 1 + len(df_motm)))
 
 # ---- BOARDROOM DF BUILD
-df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=26, sheet_name='Board Room', usecols=[12,13]).fillna(0)
+df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=27, sheet_name='Board Room', usecols=[12,13]).fillna(0)
 df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
 df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
 df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
@@ -178,7 +178,7 @@ if menu_selection == "Goals":
 if menu_selection == "MOTM":
 	st.dataframe(df_motm, width=None, height=1228, use_container_width=True, hide_index=True, column_config={"POSITION": " "})
 if menu_selection == "Board Room":
-	st.dataframe(df_broom, width=None, height=948, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
+	st.dataframe(df_broom, width=None, height=982, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
 
 st.divider()
 
