@@ -44,7 +44,7 @@ menu_selection = sac.buttons(
 
 # --- WEEK5UPDATE --- REMOVED UNTIL WEEK 5
 formguide_home_cols=[0,50,51,55,56,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
-df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3], nrows=36, sheet_name='League Table', usecols=formguide_home_cols, dtype={"WK "+str(game_week): "Int64", "WK "+str(game_week-1): "Int64", "WK "+str(game_week-2): "Int64", "WK "+str(game_week-3): "Int64", "WK "+str(game_week-4): "Int64"})
+df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3], nrows=37, sheet_name='League Table', usecols=formguide_home_cols, dtype={"WK "+str(game_week): "Int64", "WK "+str(game_week-1): "Int64", "WK "+str(game_week-2): "Int64", "WK "+str(game_week-3): "Int64", "WK "+str(game_week-4): "Int64"})
 
 
 # --- WEEK5UPDATE --- REMOVED UNTIL WEEK 5
@@ -70,7 +70,7 @@ df_ltable["FORM"] = df_ltable["WK-1"]+"  "+df_ltable["WK-2"]+df_ltable["WK-3"]+d
 # ----
 # CREATING THE TOTP UP/DOWN COLUMN
 # PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
-df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3], nrows=36, sheet_name='League Table', usecols=[0,50], dtype={"POSITION": "int64"})
+df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3], nrows=37, sheet_name='League Table', usecols=[0,50], dtype={"POSITION": "int64"})
 df_ltable = df_ltable.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
 df_ltable["TOTP_CHANGE"] = (df_ltable["POSITION_prev"]-df_ltable["POSITION_curr"])
 
@@ -107,12 +107,12 @@ df_ltable = df_ltable.style.apply(totp_highlight, subset="TOTP_FINAL")
 
 # ---  MENU SELECTION AND DF DISPLAY
 if menu_selection == "League Table":
-	st.dataframe(df_ltable, width=None, height=1297, use_container_width=True, hide_index=True, column_order=["POSITION","TOTP_FINAL","PLAYER","PLAYED","G/D","PTS","FORM"], column_config={"POSITION": " ", "TOTP_FINAL": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
+	st.dataframe(df_ltable, width=None, height=1333, use_container_width=True, hide_index=True, column_order=["POSITION","TOTP_FINAL","PLAYER","PLAYED","G/D","PTS","FORM"], column_config={"POSITION": " ", "TOTP_FINAL": " ", "PLAYED": "P", "G/D": "GD", "PTS": "Pts"})
 
 	# --- MILESTONE NOTIFICATION FUNCTION ---
 	def miles_notif(col_metric: str) -> str:
 		# --- ALL-TIME DATAFRAME BUILD FOR NOTIFICATION FUNCTION
-		miss_rows: list[int] = [0,1,3,39,40]
+		miss_rows: list[int] = [0,1,3,40,41]
 		df_season_full_tab = pd.read_excel(excel_file_season, skiprows=miss_rows, sheet_name='League Table', usecols=[0,50,51,52,53,54,55]) # --- DROP POSITION COLUMN
 		df_hof_full_tab = pd.read_excel(excel_file_hof, sheet_name="ALL TIME TABLE", skiprows=[0], usecols=[1,2,3,4,5,6,7])
 		df_at_full_tab = df_season_full_tab.join(df_hof_full_tab.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_season", rsuffix="_hof")
@@ -162,12 +162,12 @@ df_goals.insert(0, "POSITION", range(1, 1 + len(df_goals)))
 
 
 # ---- MOTM DF BUILD
-df_motm = pd.read_excel(excel_file_season, skiprows=0, nrows=34, sheet_name='MOTM', usecols=[0,52])
+df_motm = pd.read_excel(excel_file_season, skiprows=0, nrows=28, sheet_name='MOTM', usecols=[0,52])
 df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
 df_motm.insert(0, "POSITION", range(1, 1 + len(df_motm)))
 
 # ---- BOARDROOM DF BUILD
-df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=27, sheet_name='Board Room', usecols=[12,13]).fillna(0)
+df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=28, sheet_name='Board Room', usecols=[12,13]).fillna(0)
 df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
 df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
 df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
@@ -176,9 +176,9 @@ df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))
 if menu_selection == "Goals":
 	st.dataframe(df_goals, width=None, height=1225, use_container_width=True, hide_index=True, column_order=["POSITION","PLAYER","TOTAL","FORM"], column_config={"POSITION": " ","TOTAL": "GOALS"})
 if menu_selection == "MOTM":
-	st.dataframe(df_motm, width=None, height=1228, use_container_width=True, hide_index=True, column_config={"POSITION": " "})
+	st.dataframe(df_motm, width=None, height=1018, use_container_width=True, hide_index=True, column_config={"POSITION": " "})
 if menu_selection == "Board Room":
-	st.dataframe(df_broom, width=None, height=982, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
+	st.dataframe(df_broom, width=None, height=1018, use_container_width=True, hide_index=True, column_config={"POSITION": " ","Unnamed: 12": "PLAYER", "Unnamed: 13": "VISITS"})
 
 st.divider()
 
