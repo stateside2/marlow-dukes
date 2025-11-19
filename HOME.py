@@ -39,6 +39,8 @@ menu_selection = sac.buttons(
 ], label=File_Date, format_func=None, align="center", size="md", radius="md", color="#4682b4", use_container_width=True)
 # ---
 
+st.balloons()
+
 # --- PANDAS DATA FRAME SELECTION ---
 # --- HOME/LEAGUE TABLE DF BUILD
 
