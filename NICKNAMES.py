@@ -21,7 +21,8 @@ st.divider()
 
 
 nickname_data = [["CARL", "CARLOS, CARLITO, SMUDGE"], 
-["CHRIS", "POSH"], 
+["CHRIS B", "BROWN NOSE"], 
+["CHRIS P", "POSH"], 
 ["COLIN", "DWARF"], 
 ["DAN", "INSPECTOR GADGET"], 
 ["DAVID C", "CARZOLA"], 
@@ -37,12 +38,14 @@ nickname_data = [["CARL", "CARLOS, CARLITO, SMUDGE"],
 ["PHIL S", "FRED"], 
 ["ROB G", "ZIGZAG"], 
 ["ROB O", "STRAIGHT ROB"], 
+["RYAN", "GOBBY"], 
+["SONNY", "SWAMPY"], 
 ["STEVE P", "TOY BOY"], 
 ["TERRY", "STEPTOE"], 
 ["TONY", "ELBOW"]]
 
 
-st.dataframe(nickname_data, width=None, height=750, use_container_width=True, hide_index=True, column_config={1: "PLAYER", 2: "AKA"})
+st.dataframe(nickname_data, width=None, height=843, use_container_width=True, hide_index=True, column_config={1: "PLAYER", 2: "AKA"})
 
 st.divider()
 

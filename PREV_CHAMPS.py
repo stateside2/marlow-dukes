@@ -28,7 +28,7 @@ df_hof_champs = pd.read_excel(excel_file_hof, sheet_name="CHAMPIONS", skiprows=N
 df_hof_champs["SEASON"] = df_hof_champs["SEASON"].astype(str) #--- CONVERTS 2,023 TO 2023
 
 
-st.dataframe(df_hof_champs, width=None, height=493, use_container_width=True, hide_index=True, column_order=["SEASON","CHAMPION","PLAYED","POINTS"], column_config={"PLAYED": "P", "POINTS": "Pts"})
+st.dataframe(df_hof_champs, width=None, height=528, use_container_width=True, hide_index=True, column_order=["SEASON","CHAMPION","PLAYED","POINTS"], column_config={"PLAYED": "P", "POINTS": "Pts"})
 
 st.divider()
 

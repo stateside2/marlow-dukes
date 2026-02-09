@@ -44,7 +44,7 @@ menu_selection = sac.buttons(
 
 # --- WEEK5UPDATE --- REMOVED UNTIL WEEK 5
 formguide_home_cols=[0,50,51,55,56,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
-df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3], nrows=37, sheet_name='League Table', usecols=formguide_home_cols, dtype={"WK "+str(game_week): "Int64", "WK "+str(game_week-1): "Int64", "WK "+str(game_week-2): "Int64", "WK "+str(game_week-3): "Int64", "WK "+str(game_week-4): "Int64"})
+df_ltable = pd.read_excel(excel_file_season, skiprows=[0,1,3], nrows=35, sheet_name='League Table', usecols=formguide_home_cols, dtype={"WK "+str(game_week): "Int64", "WK "+str(game_week-1): "Int64", "WK "+str(game_week-2): "Int64", "WK "+str(game_week-3): "Int64", "WK "+str(game_week-4): "Int64"})
 
 
 # --- WEEK5UPDATE --- REMOVED UNTIL WEEK 5
@@ -67,12 +67,14 @@ df_ltable["FORM"] = df_ltable["WK-1"]+"  "+df_ltable["WK-2"]+df_ltable["WK-3"]+d
 # ----
 
 
+
 # ----
 # CREATING THE TOTP UP/DOWN COLUMN
 # PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
-df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3], nrows=37, sheet_name='League Table', usecols=[0,50], dtype={"POSITION": "int64"})
+df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3], nrows=35, sheet_name='League Table', usecols=[0,50], dtype={"POSITION": "int64"})
 df_ltable = df_ltable.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
 df_ltable["TOTP_CHANGE"] = (df_ltable["POSITION_prev"]-df_ltable["POSITION_curr"])
+
 
 
 # IDENTIFY UP OR DOWN ARROW TO USE
@@ -142,7 +144,7 @@ if menu_selection == "League Table":
 
 # ---- GOALS DF BUILD
 goal_guide_cols=[0,52,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week]
-df_goals = pd.read_excel(excel_file_season, skiprows=[0,1,3,37,38,39,40], sheet_name='Goals', usecols=goal_guide_cols)
+df_goals = pd.read_excel(excel_file_season, skiprows=[0,1,3], nrows=31, sheet_name='Goals', usecols=goal_guide_cols)
 
 def goal_form_guide(game_week):
 	i = game_week - 4
@@ -162,12 +164,13 @@ df_goals.insert(0, "POSITION", range(1, 1 + len(df_goals)))
 
 
 # ---- MOTM DF BUILD
-df_motm = pd.read_excel(excel_file_season, skiprows=0, nrows=28, sheet_name='MOTM', usecols=[0,52])
+# -- CHANGING NROWS=20 SHOULD ALSO CHANGE IN HALL_OF_FAME.py
+df_motm = pd.read_excel(excel_file_season, nrows=20, sheet_name='MOTM', usecols=[0,52])
 df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
 df_motm.insert(0, "POSITION", range(1, 1 + len(df_motm)))
 
 # ---- BOARDROOM DF BUILD
-df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=28, sheet_name='Board Room', usecols=[12,13]).fillna(0)
+df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=6, sheet_name='Board Room', usecols=[12,13]).fillna(0)
 df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
 df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
 df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))

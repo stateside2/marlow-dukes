@@ -5,6 +5,7 @@ st.set_page_config(page_title="Marlow Dukes", page_icon="images/marlowdukesicon.
 home_page = st.Page("HOME.py", title="HOME", icon=":material/sports_and_outdoors:")
 stats_page = st.Page("6_STATISTICS.py", title="STATISTICS", icon=":material/bar_chart:")
 hof_page = st.Page("HALL_OF_FAME.py", title="HALL OF FAME", icon=":material/trophy:")
+page_2025 = st.Page("2025_SEASON.py", title="2025", icon=":material/stars:")
 page_2024 = st.Page("9_2024_SEASON.py", title="2024", icon=":material/stars:")
 prev_champs = st.Page("PREV_CHAMPS.py", title="PREVIOUS CHAMPIONS", icon=":material/military_tech:")
 nname_page = st.Page("NICKNAMES.py", title="NICKNAMES", icon=":material/id_card:")
@@ -17,6 +18,7 @@ with st.sidebar:
 	st.page_link(hof_page, label=hof_page.title, icon=hof_page.icon)
 
 	st.subheader("Past Seasons")
+	st.page_link(page_2025, label=page_2025.title, icon=page_2025.icon)
 	st.page_link(page_2024, label=page_2024.title, icon=page_2024.icon)
 	st.page_link(prev_champs, label=prev_champs.title, icon=prev_champs.icon)
 
@@ -28,7 +30,7 @@ with st.sidebar:
 
 	st.write("---")
 
-pg = st.navigation([home_page, hof_page, page_2024, prev_champs, nname_page], position="hidden")
+pg = st.navigation([home_page, hof_page, page_2025, page_2024, prev_champs, nname_page], position="hidden")
 # pg = st.navigation([home_page, stats_page, hof_page, page_2024, prev_champs, nname_page], position="hidden")
 pg.run()
 
