@@ -46,38 +46,34 @@ stat_selection = sac.buttons(
 ], label=None, format_func=None, align="center", size="xs", radius=2, color="#4682b4", use_container_width=True)
 
 
-miss_rows = [0,1,3,41,42]
 # --- PANDAS DATA EXTRACTS ---
 # --- FULL TABLE WITH TOTP UP/DOWN ARROW
 
 # --- WEEK 5 UPDATE
-#formguide_stat_cols=[0,50,51,52,53,54,55,56,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
+formguide_stat_cols=[0,50,51,52,53,54,55,56,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
+df_full_tab = pd.read_excel(excel_file, skiprows=[0,1,3], nrows=35, sheet_name='League Table', usecols=formguide_stat_cols)
 
+def form_guide(game_week):
+	i = game_week - 4
+	match = 5
+	while i <= game_week:
+		df_full_tab.loc[df_full_tab["WK "+str(i)] > 0, "WK-"+str(match)] = "🟢"
+		df_full_tab.loc[df_full_tab["WK "+str(i)] < 0, "WK-"+str(match)] = "🔴"
+		df_full_tab.loc[df_full_tab["WK "+str(i)] == 0, "WK-"+str(match)] = "⚪"
+		df_full_tab.loc[df_full_tab["WK "+str(i)].isnull(), "WK-"+str(match)] = "➖"
+		i = i + 1
+		match = match - 1
+	return
 
-formguide_stat_cols=[0,50,51,52,53,54,55,56]
-df_full_tab = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name='League Table', usecols=formguide_stat_cols)
+form_guide(game_week)
 
-# def form_guide(game_week):
-# 	i = game_week - 4
-# 	match = 5
-# 	while i <= game_week:
-# 		df_full_tab.loc[df_full_tab["WK "+str(i)] > 0, "WK-"+str(match)] = "🟢"
-# 		df_full_tab.loc[df_full_tab["WK "+str(i)] < 0, "WK-"+str(match)] = "🔴"
-# 		df_full_tab.loc[df_full_tab["WK "+str(i)] == 0, "WK-"+str(match)] = "⚪"
-# 		df_full_tab.loc[df_full_tab["WK "+str(i)].isnull(), "WK-"+str(match)] = "➖"
-# 		i = i + 1
-# 		match = match - 1
-# 	return
-
-# form_guide(game_week)
-
-# df_full_tab["FORM"] = df_full_tab["WK-1"]+"  "+df_full_tab["WK-2"]+df_full_tab["WK-3"]+df_full_tab["WK-4"]+df_full_tab["WK-5"]
+df_full_tab["FORM"] = df_full_tab["WK-1"]+"  "+df_full_tab["WK-2"]+df_full_tab["WK-3"]+df_full_tab["WK-4"]+df_full_tab["WK-5"]
 
 
 # ----
 # CREATING THE TOTP UP/DOWN COLUMN
 # PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
-df_tab_prev = pd.read_excel(excel_file_prev, skiprows=miss_rows, sheet_name='League Table', usecols=[0,50], dtype={"POSITION": "int64"})
+df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3], nrows=35, sheet_name='League Table', usecols=[0,50], dtype={"POSITION": "int64"})
 df_full_tab = df_full_tab.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
 df_full_tab["TOTP_CHANGE"] = (df_full_tab["POSITION_prev"]-df_full_tab["POSITION_curr"])
 
@@ -107,11 +103,11 @@ df_full_tab = df_full_tab.style.apply(totp_highlight, subset="TOTP_FINAL")
 # ----
 
 # --- APEARANCES --- NEEDED FOR RATIO STATS
-df_appear = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,51])
+df_appear = pd.read_excel(excel_file, skiprows=[0,1,3], nrows=35, sheet_name="League Table", usecols=[0,51])
 df_appear = df_appear.sort_values(by=["PLAYED", "PLAYER"], ascending=[False, True])
 
 # --- WIN RATIO
-df_win_ratio = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,51,52])
+df_win_ratio = pd.read_excel(excel_file, skiprows=[0,1,3], nrows=35, sheet_name="League Table", usecols=[0,51,52])
 df_win_ratio["WIN RATIO"] = (df_win_ratio["WON"]/df_win_ratio["PLAYED"])
 df_win_ratio = df_win_ratio.drop("WON", axis=1)  # --- REMOVING COLUMNS FROM DISPLAY
 df_win_ratio = df_win_ratio.sort_values(by=["WIN RATIO", "PLAYED"], ascending=[False, False])
@@ -119,7 +115,7 @@ df_win_ratio.insert(0, "POSITION", range(1, 1 + len(df_win_ratio)))
 df_win_ratio = df_win_ratio.style.format({"WIN RATIO": "{:.3f}"})
 
 # --- LOSS RATIO
-df_loss_ratio = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,51,54])
+df_loss_ratio = pd.read_excel(excel_file, skiprows=[0,1,3], nrows=35, sheet_name="League Table", usecols=[0,51,54])
 df_loss_ratio["LOSS RATIO"] = (df_loss_ratio["LOST"]/df_loss_ratio["PLAYED"])
 df_loss_ratio = df_loss_ratio.drop("LOST", axis=1)  # --- REMOVING COLUMNS FROM DISPLAY
 df_loss_ratio = df_loss_ratio.sort_values(by=["LOSS RATIO", "PLAYED"], ascending=[False, False])
@@ -128,7 +124,7 @@ df_loss_ratio = df_loss_ratio.style.format({"LOSS RATIO": "{:.3f}"})
 
 
 # --- POINTS/MATCH
-df_pts_match = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,51,55])
+df_pts_match = pd.read_excel(excel_file, skiprows=[0,1,3], nrows=35, sheet_name="League Table", usecols=[0,51,55])
 df_pts_match["PTS/MATCH"] = (df_pts_match["PTS"]/df_pts_match["PLAYED"])
 df_pts_match = df_pts_match.drop("PTS", axis=1)  # --- REMOVING COLUMNS FROM DISPLAY
 df_pts_match = df_pts_match.sort_values(by=["PTS/MATCH", "PLAYED"], ascending=[False, False])
@@ -138,7 +134,7 @@ df_pts_match = df_pts_match.style.format({"PTS/MATCH": "{:.3f}"})
 
 # --- GOALS/MATCH
 #df_goal_appear = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,54])
-df_goals = pd.read_excel(excel_file, skiprows=[0,1,3,37,38,39,40], sheet_name="Goals", usecols=[0,52])
+df_goals = pd.read_excel(excel_file, skiprows=[0,1,3], nrows=31, sheet_name="Goals", usecols=[0,52])
 df_goals_match = df_appear.join(df_goals.set_index("PLAYER"), on="PLAYER") #--- JOINING 2 DATAFRAMES (USING DF_APPEAR FROM ABOVE)
 df_goals_match = df_goals_match.fillna(0) #--- FILL ALL NULL VALUES WITH ZERO
 df_goals_match["GOALS/MATCH"] = (df_goals_match["TOTAL"]/df_goals_match["PLAYED"])
@@ -152,7 +148,7 @@ df_goals_match = df_goals_match.style.format({"GOALS/MATCH": "{:.3f}"})
 
 
 # --- MOTM VOTES/MATCH
-df_motm = pd.read_excel(excel_file, skiprows=[1,35,36,37,38,39], sheet_name='MOTM', usecols=[0,52])
+df_motm = pd.read_excel(excel_file, nrows=20, sheet_name='MOTM', usecols=[0,52])
 df_MOTM_match = df_appear.join(df_motm.set_index("PLAYER"), on="PLAYER")
 df_MOTM_match = df_MOTM_match.fillna(0) #--- FILL ALL NULL VALUES WITH ZERO
 df_MOTM_match["VOTES/MATCH"] = (df_MOTM_match["VOTES"]/df_MOTM_match["PLAYED"])
@@ -171,7 +167,7 @@ df_MOTM_match = df_MOTM_match.style.format({"VOTES/MATCH": "{:.3f}"})
 #df_broom_match = pd.concat([df_broom,df_appear], axis=1)
 
 # --- PLAYER ANALYSIS
-df_result_like = pd.read_excel(excel_file, skiprows=miss_rows, sheet_name="League Table", usecols=[0,51,52,53,54])
+df_result_like = pd.read_excel(excel_file, skiprows=[0,1,3], nrows=35, sheet_name="League Table", usecols=[0,51,52,53,54])
 df_result_like["WIN %"] = (df_result_like["WON"]/df_result_like["PLAYED"])
 df_result_like["DRAW %"] = (df_result_like["DRAWN"]/df_result_like["PLAYED"])
 df_result_like["LOSS %"] = (df_result_like["LOST"]/df_result_like["PLAYED"])

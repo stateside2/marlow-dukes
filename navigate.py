@@ -14,7 +14,7 @@ nname_page = st.Page("NICKNAMES.py", title="NICKNAMES", icon=":material/id_card:
 with st.sidebar:
 	st.subheader("Current Season")
 	st.page_link(home_page, label=home_page.title, icon=home_page.icon)
-	# st.page_link(stats_page, label=stats_page.title, icon=stats_page.icon)
+	st.page_link(stats_page, label=stats_page.title, icon=stats_page.icon)
 	st.page_link(hof_page, label=hof_page.title, icon=hof_page.icon)
 
 	st.subheader("Past Seasons")
@@ -30,7 +30,7 @@ with st.sidebar:
 
 	st.write("---")
 
-pg = st.navigation([home_page, hof_page, page_2025, page_2024, prev_champs, nname_page], position="hidden")
+pg = st.navigation([home_page, stats_page, hof_page, page_2025, page_2024, prev_champs, nname_page], position="hidden")
 # pg = st.navigation([home_page, stats_page, hof_page, page_2024, prev_champs, nname_page], position="hidden")
 pg.run()
 

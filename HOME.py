@@ -170,7 +170,7 @@ df_motm = df_motm.sort_values(by=["VOTES", "PLAYER"], ascending=[False, True])
 df_motm.insert(0, "POSITION", range(1, 1 + len(df_motm)))
 
 # ---- BOARDROOM DF BUILD
-df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=6, sheet_name='Board Room', usecols=[12,13]).fillna(0)
+df_broom = pd.read_excel(excel_file_season, skiprows=7, nrows=15, sheet_name='Board Room', usecols=[12,13]).fillna(0)
 df_broom["Unnamed: 12"] = df_broom["Unnamed: 12"].str.upper() # --- MAKES THE BOARD ROOM PLAYER COLUMN UPPER CASE ---
 df_broom = df_broom.sort_values(by=["Unnamed: 13", "Unnamed: 12"], ascending=[False, True])
 df_broom.insert(0, "POSITION", range(1, 1 + len(df_broom)))

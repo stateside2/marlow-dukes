@@ -39,14 +39,8 @@ hof_selection = sac.buttons(
     sac.ButtonsItem(label="All-time Win Ratio", icon=None),
     sac.ButtonsItem(label="All-time Loss Ratio", icon=None),
     sac.ButtonsItem(label="All-time Points per Match", icon=None),
-    sac.ButtonsItem(label="Previous Champions", icon=None),
     sac.ButtonsItem(label="Previous Podiums", icon=None),
 ], label=None, format_func=None, align="center", size="xs", radius="2", color="#4682b4", use_container_width=True)
-
-
-# --- CHAMPIONS DF
-df_hof_champs = pd.read_excel(excel_file_hof, sheet_name="CHAMPIONS", skiprows=None, usecols=[0,1,2,6])
-df_hof_champs["SEASON"] = df_hof_champs["SEASON"].astype(str) #--- CONVERTS 2,023 TO 2023
 
 
 # --- ALL-TIME TABLE BUILD FUNCTION
@@ -169,12 +163,9 @@ if hof_selection == "All-time Loss Ratio":
 if hof_selection == "All-time Points per Match":
 	ratio_table_build("PTS/MATCH", "PTS/MATCH")
 
-if hof_selection == "Previous Champions":
-	st.dataframe(df_hof_champs, width=None, height=500, use_container_width=True, hide_index=True, column_order=["SEASON","CHAMPION","PLAYED","POINTS"], column_config={"PLAYED": "P", "POINTS": "Pts"})
-
 if hof_selection == "Previous Podiums":
 	podium_table_build(None)
-	season: list[int] = range(2023,2011,-1) # --- NEED TO MODIFY FOR A NEW SEASON
+	season: list[int] = range(2024,2011,-1) # --- NEED TO MODIFY FOR A NEW SEASON
 	skip_row_list_max: int = 4
 	for i in season:
 		podium_table_build(range(0,skip_row_list_max))
