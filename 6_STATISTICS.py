@@ -51,7 +51,7 @@ stat_selection = sac.buttons(
 
 # --- WEEK 5 UPDATE
 formguide_stat_cols=[0,50,51,52,53,54,55,56,(game_week-4),(game_week-3),(game_week-2),(game_week-1),game_week] #--- THIS WILL BREAK WHEN GAME_WEEK < 5
-df_full_tab = pd.read_excel(excel_file, skiprows=[0,1,3], nrows=35, sheet_name='League Table', usecols=formguide_stat_cols)
+df_full_tab = pd.read_excel(excel_file, skiprows=[0,1,3], nrows=36, sheet_name='League Table', usecols=formguide_stat_cols)
 
 def form_guide(game_week):
 	i = game_week - 4
@@ -73,7 +73,7 @@ df_full_tab["FORM"] = df_full_tab["WK-1"]+"  "+df_full_tab["WK-2"]+df_full_tab["
 # ----
 # CREATING THE TOTP UP/DOWN COLUMN
 # PULL THE PREVIOUS FULL TABLE, JOIN IT TO THE CURRENT FULL TABLE AND ADD THE TOTP_CHANGE/DELTA COLUMN
-df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3], nrows=35, sheet_name='League Table', usecols=[0,50], dtype={"POSITION": "int64"})
+df_tab_prev = pd.read_excel(excel_file_prev, skiprows=[0,1,3], nrows=36, sheet_name='League Table', usecols=[0,50], dtype={"POSITION": "int64"})
 df_full_tab = df_full_tab.join(df_tab_prev.set_index("PLAYER"), on="PLAYER", how="outer", lsuffix="_curr", rsuffix="_prev")
 df_full_tab["TOTP_CHANGE"] = (df_full_tab["POSITION_prev"]-df_full_tab["POSITION_curr"])
 
