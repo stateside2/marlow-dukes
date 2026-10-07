@@ -1,5 +1,5 @@
 # ---- USED FOR FORM GUIDE FUNCTION IN HOME.py and 6_STATISTICS.py
-game_week = 31
+game_week = 40
 
 # ---- USED AS MENU TITLE IN HOME.py
-File_Date = "Week 31 - 5th August 2026"
+File_Date = "Week 40 - 7th October 2026"
